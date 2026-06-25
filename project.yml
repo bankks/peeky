@@ -41,6 +41,29 @@ targets:
       properties:
         com.apple.security.app-sandbox: true
         com.apple.security.files.user-selected.read-only: true
+        com.apple.security.application-groups: [group.com.peeky]
+
+  PeekyGenerator:
+    type: bundle
+    platform: macOS
+    sources:
+      - path: PeekyGenerator
+        excludes:
+          - "Info.plist"
+      - path: Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.peeky.generator
+        INFOPLIST_FILE: PeekyGenerator/Info.plist
+        WRAPPER_EXTENSION: qlgenerator
+        MACH_O_TYPE: mh_bundle
+        SWIFT_VERSION: "5.10"
+        MACOSX_DEPLOYMENT_TARGET: "14.0"
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGNING_REQUIRED: NO
+        CODE_SIGN_IDENTITY: ""
+    dependencies:
+      - package: Ink
 
   PeekyExtension:
     type: app-extension
@@ -51,6 +74,10 @@ targets:
           - "**/*.html"
           - "**/*.css"
           - "**/*.js"
+          - "FrontMatterParser.swift"
+          - "HTMLTemplate.swift"
+          - "MarkdownRenderer.swift"
+          - "PreviewProvider.swift"
       - path: Shared
     resources:
       - PeekyExtension/Resources
@@ -66,3 +93,4 @@ targets:
       properties:
         com.apple.security.app-sandbox: true
         com.apple.security.files.user-selected.read-only: true
+        com.apple.security.application-groups: [group.com.peeky]

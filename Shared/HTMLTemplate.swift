@@ -7,7 +7,10 @@ enum HTMLTemplate {
         frontMatter: [String: String],
         theme: AppSettings.Theme,
         fontSize: Int,
-        lineWidth: Int
+        lineWidth: Int,
+        highlightJS: String = "",
+        highlightCSSLight: String = "",
+        highlightCSSDark: String = ""
     ) -> String {
         let themeClass: String
         switch theme {
@@ -15,6 +18,15 @@ enum HTMLTemplate {
         case .dark:   themeClass = "theme-dark"
         case .system: themeClass = ""
         }
+
+        let hljsCSS = buildHighlightCSS(
+            light: highlightCSSLight,
+            dark: highlightCSSDark,
+            theme: theme
+        )
+
+        let hljsStyleTag = hljsCSS.isEmpty ? "" : "<style>\(hljsCSS)</style>"
+        let hljsScriptTag = highlightJS.isEmpty ? "" : "<script>\(highlightJS)</script>"
 
         let frontMatterHTML = frontMatterBlock(frontMatter)
 
@@ -24,9 +36,11 @@ enum HTMLTemplate {
         <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1">
+          \(hljsStyleTag)
           <style>
             \(css(fontSize: fontSize, lineWidth: lineWidth))
           </style>
+          \(hljsScriptTag)
         </head>
         <body>
           <main>
@@ -34,11 +48,23 @@ enum HTMLTemplate {
             \(body)
           </main>
           <script>
-            \(highlightScript())
+            if (typeof hljs !== 'undefined') { hljs.highlightAll(); }
           </script>
         </body>
         </html>
         """
+    }
+
+    private static func buildHighlightCSS(light: String, dark: String, theme: AppSettings.Theme) -> String {
+        switch theme {
+        case .light:
+            return light
+        case .dark:
+            return dark
+        case .system:
+            let darkWrapped = dark.isEmpty ? "" : "@media (prefers-color-scheme: dark) {\n\(dark)\n}"
+            return [light, darkWrapped].filter { !$0.isEmpty }.joined(separator: "\n")
+        }
     }
 
     // MARK: - Front matter header block
@@ -60,16 +86,6 @@ enum HTMLTemplate {
           <table>\(rows)</table>
         </div>
         """
-    }
-
-    // MARK: - Inline highlight (no CDN)
-
-    /// Minimal syntax highlight using <pre><code> class detection and CSS only.
-    /// Full highlight.js can be bundled as a Resource and injected here later.
-    private static func highlightScript() -> String {
-        // Phase 1 tracer bullet: no JS syntax highlighting yet.
-        // highlight.js will be added as a bundled Resource in the next iteration.
-        return ""
     }
 
     // MARK: - CSS

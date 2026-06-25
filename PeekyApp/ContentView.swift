@@ -27,17 +27,17 @@ struct ContentView: View {
 }
 
 struct SettingsView: View {
-    @AppStorage(Settings.Keys.theme) private var theme: String = Settings.Theme.system.rawValue
-    @AppStorage(Settings.Keys.fontSize) private var fontSize: Double = 16
-    @AppStorage(Settings.Keys.lineWidth) private var lineWidth: Double = 720
+    @AppStorage(AppSettings.Keys.theme, store: AppSettings.store) private var theme: String = AppSettings.Theme.system.rawValue
+    @AppStorage(AppSettings.Keys.fontSize, store: AppSettings.store) private var fontSize: Double = 16
+    @AppStorage(AppSettings.Keys.lineWidth, store: AppSettings.store) private var lineWidth: Double = 720
 
     var body: some View {
         Form {
             Section("Appearance") {
                 Picker("Theme", selection: $theme) {
-                    Text("System").tag(Settings.Theme.system.rawValue)
-                    Text("Light").tag(Settings.Theme.light.rawValue)
-                    Text("Dark").tag(Settings.Theme.dark.rawValue)
+                    Text("System").tag(AppSettings.Theme.system.rawValue)
+                    Text("Light").tag(AppSettings.Theme.light.rawValue)
+                    Text("Dark").tag(AppSettings.Theme.dark.rawValue)
                 }
                 .pickerStyle(.segmented)
 

@@ -36,7 +36,7 @@ brew install --cask peeky
 ```
 
 ### Direct download
-Download the latest `.dmg` from [Releases](https://github.com/diascanio/peeky/releases).
+Download the latest `.dmg` from [Releases](https://github.com/bankks/peeky/releases).
 
 After installing:
 1. Open **Peeky.app** once to register the extension
@@ -57,7 +57,7 @@ After installing:
 brew install xcodegen
 
 # Clone and build
-git clone https://github.com/diascanio/peeky
+git clone https://github.com/bankks/peeky
 cd peeky
 xcodegen generate
 open Peeky.xcodeproj
@@ -87,4 +87,4 @@ MIT — use freely, attribute kindly.
 
 ---
 
-*Built by [Vini Diascanio](https://linkedin.com/in/diascanio) as a public case study in PM-led product development.*
+*Built by [Vini Diascanio](https://linkedin.com/in/vini-diascanio) as a public case study in PM-led product development.*

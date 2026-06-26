@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Peeky — Before &amp; After</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #ECECEC;
+      font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 32px;
+    }
+
+    .wrapper {
+      display: flex;
+      gap: 16px;
+      width: 1400px;
+      max-width: 100%;
+    }
+
+    .panel {
+      flex: 1;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18), 0 1px 4px rgba(0,0,0,0.10);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Window chrome ── */
+    .titlebar {
+      background: #f0f0f0;
+      border-bottom: 1px solid #d0d0d0;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .titlebar .dots {
+      display: flex;
+      gap: 6px;
+    }
+    .dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+    }
+    .dot.red    { background: #ff5f56; }
+    .dot.yellow { background: #ffbd2e; }
+    .dot.green  { background: #27c93f; }
+
+    .titlebar .label {
+      font-size: 12px;
+      color: #555;
+      margin-left: 8px;
+      font-weight: 500;
+    }
+    .titlebar .badge {
+      margin-left: auto;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .badge.before {
+      background: #e8e8e8;
+      color: #888;
+    }
+    .badge.after {
+      background: #dff0e8;
+      color: #1a7a3e;
+    }
+
+    /* ── Panel content ── */
+    .content {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ── LEFT: plain text ── */
+    .plain-text {
+      padding: 24px;
+      font-family: "SF Mono", "Menlo", "Consolas", monospace;
+      font-size: 12.5px;
+      line-height: 1.65;
+      color: #555;
+      white-space: pre;
+      overflow: hidden;
+      height: 680px;
+    }
+
+    /* ── RIGHT: rendered HTML ── */
+    .rendered {
+      padding: 28px 32px 32px;
+      overflow: hidden;
+      height: 680px;
+    }
+
+    /* Peeky styles (from HTMLTemplate.swift) */
+    .rendered {
+      font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.7;
+      color: #1f2328;
+      background: #fff;
+    }
+
+    .rendered .front-matter {
+      background: #f0f6ff;
+      border: 1px solid #c8d8f0;
+      border-radius: 6px;
+      padding: 10px 14px;
+      margin-bottom: 20px;
+      font-size: 0.85em;
+    }
+    .rendered .front-matter table { border-collapse: collapse; width: 100%; }
+    .rendered .front-matter td { padding: 2px 8px 2px 0; vertical-align: top; }
+    .rendered .fm-key {
+      color: #636c76;
+      font-family: "SF Mono", "Menlo", monospace;
+      white-space: nowrap;
+      min-width: 80px;
+      font-size: 11px;
+    }
+    .rendered .fm-val { color: #1f2328; font-size: 11px; }
+
+    .rendered h1 {
+      font-size: 1.75em;
+      font-weight: 600;
+      border-bottom: 1px solid #d1d9e0;
+      padding-bottom: 0.25em;
+      margin-top: 0;
+      margin-bottom: 0.6em;
+      color: #1f2328;
+    }
+    .rendered h2 {
+      font-size: 1.25em;
+      font-weight: 600;
+      border-bottom: 1px solid #d1d9e0;
+      padding-bottom: 0.2em;
+      margin-top: 1.2em;
+      margin-bottom: 0.4em;
+      color: #1f2328;
+    }
+    .rendered h3 {
+      font-size: 1.05em;
+      font-weight: 600;
+      margin-top: 1em;
+      margin-bottom: 0.3em;
+    }
+
+    .rendered p { margin-bottom: 0.8em; font-size: 13.5px; }
+
+    .rendered table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 1em;
+      font-size: 12.5px;
+    }
+    .rendered th, .rendered td {
+      border: 1px solid #d1d9e0;
+      padding: 6px 10px;
+      text-align: left;
+    }
+    .rendered th {
+      background: #f6f8fa;
+      font-weight: 600;
+    }
+    .rendered tr:nth-child(even) td { background: #f6f8fa; }
+
+    .rendered pre {
+      background: #f6f8fa;
+      border: 1px solid #d1d9e0;
+      border-radius: 6px;
+      padding: 12px 14px;
+      overflow-x: auto;
+      margin-bottom: 0.8em;
+      font-family: "SF Mono", "Menlo", monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #1f2328;
+    }
+
+    .rendered code {
+      font-family: "SF Mono", "Menlo", monospace;
+      font-size: 0.85em;
+      background: #f6f8fa;
+      padding: 0.15em 0.35em;
+      border-radius: 3px;
+      border: 1px solid #d1d9e0;
+    }
+    .rendered pre code {
+      background: none; border: none; padding: 0;
+    }
+
+    .rendered blockquote {
+      border-left: 4px solid #d1d9e0;
+      color: #636c76;
+      padding: 0 1em;
+      margin: 0 0 0.8em;
+      font-style: italic;
+      font-size: 13px;
+    }
+
+    .rendered ul { padding-left: 1.6em; margin-bottom: 0.8em; }
+    .rendered li { margin-bottom: 0.2em; font-size: 13px; }
+
+    /* task list */
+    .rendered .task-item { list-style: none; margin-left: -1.6em; padding-left: 0; }
+    .rendered .task-item span { margin-right: 6px; }
+
+    /* syntax highlight colors (simplified) */
+    .kw  { color: #cf222e; }
+    .fn  { color: #8250df; }
+    .str { color: #0a3069; }
+    .cm  { color: #6e7781; }
+    .ty  { color: #953800; }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- LEFT: without Peeky -->
+  <div class="panel">
+    <div class="titlebar">
+      <div class="dots">
+        <div class="dot red"></div>
+        <div class="dot yellow"></div>
+        <div class="dot green"></div>
+      </div>
+      <span class="label">test.md — Quick Look</span>
+      <span class="badge before">Without Peeky</span>
+    </div>
+    <div class="content">
+      <div class="plain-text">---
+title: Peeky Test File
+date: 2026-06-25
+tags: test, markdown, quick-look
+author: Vini
+---
+
+# Heading 1 — Main Title
+
+This is a paragraph testing the **bold**, *italic*,
+and `inline code` rendering.
+
+## Heading 2 — Features
+
+### GFM Tables
+
+| Feature         | Status  | Notes                      |
+|-----------------|---------|----------------------------|
+| Front matter    | ✅       | YAML header highlighted    |
+| Code blocks     | ✅       | Syntax-aware styling       |
+| Dark mode       | ✅       | Follows system preference  |
+| Tables          | ✅       | You're reading one         |
+
+### Code Block
+
+```swift
+func hello(name: String) -> String {
+    return "Hello, \(name)!"
+}
+```
+
+### Task List
+
+- [x] Build PeekyGenerator target
+- [x] Build PeekyExtension target
+- [x] Extension registered in pluginkit
+- [ ] Test Space bar in Finder
+
+### Blockquote
+
+> "See your Markdown. Don't open it."
+> — Peeky tagline
+
+---
+
+**If you can read this in Quick Look, Peeky works.** 🎉
+</div>
+    </div>
+  </div>
+
+  <!-- RIGHT: with Peeky -->
+  <div class="panel">
+    <div class="titlebar">
+      <div class="dots">
+        <div class="dot red"></div>
+        <div class="dot yellow"></div>
+        <div class="dot green"></div>
+      </div>
+      <span class="label">test.md — Quick Look</span>
+      <span class="badge after">With Peeky ✦</span>
+    </div>
+    <div class="content">
+      <div class="rendered">
+
+        <div class="front-matter">
+          <table>
+            <tr><td class="fm-key">title</td><td class="fm-val">Peeky Test File</td></tr>
+            <tr><td class="fm-key">date</td><td class="fm-val">2026-06-25</td></tr>
+            <tr><td class="fm-key">tags</td><td class="fm-val">test, markdown, quick-look</td></tr>
+            <tr><td class="fm-key">author</td><td class="fm-val">Vini</td></tr>
+          </table>
+        </div>
+
+        <h1>Heading 1 — Main Title</h1>
+
+        <p>This is a paragraph testing the <strong>bold</strong>, <em>italic</em>, and <code>inline code</code> rendering.</p>
+
+        <h2>Heading 2 — Features</h2>
+
+        <h3>GFM Tables</h3>
+
+        <table>
+          <thead>
+            <tr><th>Feature</th><th>Status</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Front matter</td><td>✅</td><td>YAML header highlighted</td></tr>
+            <tr><td>Code blocks</td><td>✅</td><td>Syntax-aware styling</td></tr>
+            <tr><td>Dark mode</td><td>✅</td><td>Follows system preference</td></tr>
+            <tr><td>Tables</td><td>✅</td><td>You're reading one</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Code Block</h3>
+
+        <pre><code><span class="kw">func</span> <span class="fn">hello</span>(name: <span class="ty">String</span>) -> <span class="ty">String</span> {
+    <span class="kw">return</span> <span class="str">"Hello, \(name)!"</span>
+}</code></pre>
+
+        <h3>Task List</h3>
+        <ul>
+          <li class="task-item"><span>✅</span> Build PeekyGenerator target</li>
+          <li class="task-item"><span>✅</span> Build PeekyExtension target</li>
+          <li class="task-item"><span>✅</span> Extension registered in pluginkit</li>
+          <li class="task-item"><span>☐</span> Test Space bar in Finder</li>
+        </ul>
+
+        <h3>Blockquote</h3>
+        <blockquote>
+          <p>"See your Markdown. Don't open it."<br>— Peeky tagline</p>
+        </blockquote>
+
+        <hr style="border:none; border-top: 1px solid #d1d9e0; margin: 1.2em 0;">
+
+        <p><strong>If you can read this in Quick Look, Peeky works.</strong> 🎉</p>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

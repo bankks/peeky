@@ -4,7 +4,7 @@
 
 Peeky is a macOS Quick Look extension that renders `.md` files as beautiful HTML — just press **Space** in Finder.
 
-![demo placeholder](docs/assets/demo.gif)
+![Before and after: plain text vs Peeky rendered HTML](docs/assets/preview.png)
 
 ---
 

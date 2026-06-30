@@ -4,7 +4,7 @@
 
 Peeky is a macOS Quick Look extension that renders `.md` files as beautiful HTML — just press **Space** in Finder.
 
-![Before and after: plain text vs Peeky rendered HTML](docs/assets/preview.png)
+![Finder showing .md files, Space key pressed, Quick Look opens with formatted content](docs/assets/preview.png)
 
 ---
 
@@ -13,6 +13,17 @@ Peeky is a macOS Quick Look extension that renders `.md` files as beautiful HTML
 macOS previews images, PDFs, and code files natively. Markdown shows up as plain text. If you work with `.md` files daily (notes, docs, AI outputs, READMEs), opening each one in an editor just to read it is friction you shouldn't have.
 
 Peeky makes Markdown a first-class citizen on your Mac.
+
+---
+
+## When it clicks
+
+- **Checking a README before cloning** — browse a project folder, Space on `README.md`, done. No editor launch needed.
+- **Reviewing docs without opening the project** — `CONTRIBUTING.md`, `CHANGELOG.md`, `CLAUDE.md` — read them in Finder without spinning up VS Code or Xcode.
+- **Glancing at AI outputs** — exported chat sessions, prompt files, generated plans. Readable in one keystroke.
+- **Reading your own notes** — daily notes, meeting summaries, project briefs. The right format, instantly.
+- **Skimming a proposal or spec** — someone sent a `.md` file. You open Finder, hit Space, and get structured, formatted content — not a wall of raw Markdown syntax.
+- **Anywhere you'd say "let me just quickly open this"** — that "quickly" is now just Space.
 
 ---
 

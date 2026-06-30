@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="docs/assets/logo.png" alt="Peeky" width="160" />
+</div>
+
 # Peeky
 
 **See your Markdown. Don't open it.**
@@ -75,6 +79,12 @@ open Peeky.xcodeproj
 ```
 
 Build & run the **Peeky** scheme in Xcode. The Quick Look extension registers automatically.
+
+---
+
+## Typography
+
+Peeky's identity uses [Saira](https://fonts.google.com/specimen/Saira) — a geometric sans-serif designed for digital interfaces. The app icon is derived from the "ee" letterforms in the wordmark.
 
 ---
 

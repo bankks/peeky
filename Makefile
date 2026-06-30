@@ -8,6 +8,7 @@ install: build
 	@rm -rf /Applications/Peeky.app
 	@cp -r dist/Peeky.app /Applications/Peeky.app
 	@echo "→ Registering Quick Look extension..."
+	@pluginkit -a /Applications/Peeky.app/Contents/PlugIns/PeekyExtension.appex
 	@killall -9 QuickLookUIService 2>/dev/null || true
 	@qlmanage -r
 	@qlmanage -r cache

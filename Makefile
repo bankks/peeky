@@ -1,4 +1,7 @@
-.PHONY: build install uninstall clean reset-ql
+DMG_NAME = dist/Peeky.dmg
+DMG_STAGE = /tmp/peeky-dmg-stage
+
+.PHONY: build install uninstall dmg dmg-only clean reset-ql
 
 build:
 	@bash scripts/build.sh
@@ -23,6 +26,22 @@ uninstall:
 	@qlmanage -r cache
 	@killall Finder
 	@echo "✓ Peeky uninstalled."
+
+dmg: build dmg-only
+
+dmg-only:
+	@echo "→ Creating DMG..."
+	@rm -rf $(DMG_STAGE) $(DMG_NAME)
+	@mkdir -p $(DMG_STAGE)
+	@cp -r dist/Peeky.app $(DMG_STAGE)/
+	@ln -s /Applications $(DMG_STAGE)/Applications
+	@hdiutil create \
+	  -volname "Peeky" \
+	  -srcfolder $(DMG_STAGE) \
+	  -ov -format UDZO \
+	  $(DMG_NAME) -quiet
+	@rm -rf $(DMG_STAGE)
+	@echo "✓ DMG → $(DMG_NAME)"
 
 clean:
 	@rm -rf build/ dist/

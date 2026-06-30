@@ -1,4 +1,5 @@
 import SwiftUI
+import ServiceManagement
 
 struct ContentView: View {
     var body: some View {
@@ -33,6 +34,19 @@ struct SettingsView: View {
 
     var body: some View {
         Form {
+            Section("General") {
+                Toggle("Launch at login", isOn: Binding(
+                    get: { SMAppService.mainApp.status == .enabled },
+                    set: { enabled in
+                        if enabled {
+                            try? SMAppService.mainApp.register()
+                        } else {
+                            try? SMAppService.mainApp.unregister()
+                        }
+                    }
+                ))
+            }
+
             Section("Appearance") {
                 Picker("Theme", selection: $theme) {
                     Text("System").tag(AppSettings.Theme.system.rawValue)

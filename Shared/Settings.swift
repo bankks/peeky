@@ -5,6 +5,7 @@ enum AppSettings {
         static let theme = "peeky.theme"
         static let fontSize = "peeky.fontSize"
         static let lineWidth = "peeky.lineWidth"
+        static let isActive = "peeky.active"
     }
 
     enum Theme: String {
@@ -28,5 +29,10 @@ enum AppSettings {
     static var lineWidth: Int {
         let v = store.double(forKey: Keys.lineWidth)
         return v > 0 ? Int(v) : 720
+    }
+
+    static var isActive: Bool {
+        get { store.bool(forKey: Keys.isActive) }
+        set { store.set(newValue, forKey: Keys.isActive) }
     }
 }

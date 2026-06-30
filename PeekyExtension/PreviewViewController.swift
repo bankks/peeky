@@ -32,6 +32,12 @@ class PreviewViewController: NSViewController, QLPreviewingController {
     // MARK: - QLPreviewingController
 
     func preparePreviewOfFile(at url: URL, completionHandler handler: @escaping (Error?) -> Void) {
+        guard AppSettings.isActive else {
+            webView.loadHTMLString(inactiveHTML(), baseURL: nil)
+            handler(nil)
+            return
+        }
+
         do {
             let raw = try String(contentsOf: url, encoding: .utf8)
             let (frontMatter, markdownBody) = FrontMatterParser.parse(raw)
@@ -61,6 +67,35 @@ class PreviewViewController: NSViewController, QLPreviewingController {
         } catch {
             handler(error)
         }
+    }
+
+    private func inactiveHTML() -> String {
+        """
+        <!DOCTYPE html>
+        <html>
+        <head>
+        <meta charset="utf-8">
+        <style>
+          body { font-family: -apple-system, sans-serif; display: flex; align-items: center;
+                 justify-content: center; height: 100vh; margin: 0; background: #F9F9F9;
+                 color: #1C1C1E; }
+          @media (prefers-color-scheme: dark) {
+            body { background: #1C1C1E; color: #F2F2F7; }
+            p    { color: #8E8E93; }
+          }
+          .wrap { text-align: center; }
+          h2 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+          p  { font-size: 14px; color: #6C6C70; margin: 0; }
+        </style>
+        </head>
+        <body>
+          <div class="wrap">
+            <h2>Peeky is not running</h2>
+            <p>Open Peeky.app to enable Markdown previews.</p>
+          </div>
+        </body>
+        </html>
+        """
     }
 }
 

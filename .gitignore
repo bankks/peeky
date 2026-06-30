@@ -32,6 +32,7 @@ Peeky.xcodeproj/
 # Archives
 *.xcarchive
 build/
+dist/
 
 # Old-style Quick Look generator (dropped in macOS 26)
 *.qlgenerator
